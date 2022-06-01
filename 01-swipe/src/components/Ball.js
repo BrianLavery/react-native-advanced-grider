@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 
+// Animated module works totally independent of state to move around
+
 class Ball extends Component {
-	constructor(props) {
-		super(props);
-		this.position = new Animated.ValueXY(0, 0);
+	position = new Animated.ValueXY({ x: 0, y: 0 });
+
+	componentDidMount() {
 		Animated.spring(this.position, {
 			toValue: { x: 200, y: 500 },
+			useNativeDriver: false,
 		}).start();
 	}
 
@@ -25,7 +28,7 @@ const styles = StyleSheet.create({
 		width: 60,
 		borderRadius: 30,
 		borderWidth: 30,
-		borderColor: 'black',
+		borderColor: 'darkblue',
 	},
 });
 
