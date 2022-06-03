@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -28,10 +28,21 @@ export default function App() {
 		);
 	};
 
+	const renderNoMoreCards = () => {
+		return (
+			<Card>
+				<Card.Title>All Done!</Card.Title>
+				<Card.Divider />
+				<Text style={{ marginBottom: 12 }}>There's no more content here!</Text>
+				<Button title='Get more!' backgroundColor='#03A9F4'></Button>
+			</Card>
+		);
+	};
+
 	return (
 		<View style={styles.container}>
 			<SafeAreaView>
-				<Deck data={DATA} renderCard={renderCard} />
+				<Deck data={DATA} renderCard={renderCard} renderNoMoreCards={renderNoMoreCards} />
 			</SafeAreaView>
 			<StatusBar style='auto' />
 		</View>
