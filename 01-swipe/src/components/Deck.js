@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { View, Animated, PanResponder, Dimensions } from 'react-native';
+import { View, Animated, PanResponder, Dimensions, StyleSheet, LayoutAnimation, UIManager } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_THRESHOLD = 0.3 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
+const CASCADE_AMOUNT_VERTICAL = 10;
+const CASCADE_AMOUNT_HORIZONTAL = 0;
 
 class Deck extends Component {
 	static defaultProps = {
@@ -37,6 +40,19 @@ class Deck extends Component {
 
 		// We don't use state to update panResponder or position so we could assign to this.panResponder and this.position if we chose to
 		this.state = { panResponder, position, index: 0 };
+	}
+
+	// NOT SURE FUNCTION BELOW WORKS - HE USED componentWillReceiveProps (deprecated) and this was suggested
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (nextProps.data !== prevState.data) {
+			return { index: 0 };
+		}
+	}
+
+	componentDidUpdate() {
+		// This long line below is specifically for Android
+		UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+		LayoutAnimation.spring();
 	}
 
 	// Animated.timing moves linear motion
@@ -87,26 +103,52 @@ class Deck extends Component {
 			return this.props.renderNoMoreCards();
 		}
 
-		return this.props.data.map((item, arrayIndex) => {
-			if (arrayIndex < this.state.index) {
-				return null;
-			}
+		return this.props.data
+			.map((item, arrayIndex) => {
+				if (arrayIndex < this.state.index) {
+					return null;
+				}
 
-			if (arrayIndex === this.state.index) {
+				if (arrayIndex === this.state.index) {
+					return (
+						<Animated.View
+							key={item.id}
+							style={[this.getCardStyle(), styles.cardStyle]}
+							{...this.state.panResponder.panHandlers}>
+							{this.props.renderCard(item)}
+						</Animated.View>
+					);
+				}
+
+				// We use Animated.View here else we would rerender each time we change from one to the other
 				return (
-					<Animated.View key={item.id} style={this.getCardStyle()} {...this.state.panResponder.panHandlers}>
+					<Animated.View
+						key={item.id}
+						style={[
+							styles.cardStyle,
+							{
+								top: CASCADE_AMOUNT_VERTICAL * (arrayIndex - this.state.index) + SCREEN_HEIGHT * 0.05,
+								left: CASCADE_AMOUNT_HORIZONTAL * (arrayIndex - this.state.index),
+							},
+						]}>
 						{this.props.renderCard(item)}
 					</Animated.View>
 				);
-			}
-
-			return this.props.renderCard(item);
-		});
+			})
+			.reverse();
 	}
 
 	render() {
 		return <View>{this.renderCards()}</View>;
 	}
 }
+
+const styles = StyleSheet.create({
+	cardStyle: {
+		position: 'absolute',
+		width: SCREEN_WIDTH,
+		top: SCREEN_HEIGHT * 0.05,
+	},
+});
 
 export default Deck;
