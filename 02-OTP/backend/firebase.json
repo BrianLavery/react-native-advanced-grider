@@ -1,0 +1,19 @@
+{
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "database": {
+      "port": 5004
+    },
+    "ui": {
+      "enabled": true
+    }
+  },
+  "functions": {
+    "source": "functions"
+  }
+}
