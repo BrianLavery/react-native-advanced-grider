@@ -1,24 +1,34 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import { Input, Button } from 'react-native-elements';
+import firebase from 'firebase';
+
 import googleCloudFunctions from '../apis/googleCloudFunctions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-class SignupForm extends Component {
-	state = { phone: '', errorMessage: '' };
+class SigninForm extends Component {
+	state = { phone: '', code: '', errorMessage: '' };
 
 	handleSubmit = async () => {
 		try {
-			await googleCloudFunctions.post('/createUser', { phone: this.state.phone });
-			await googleCloudFunctions.post('/requestOneTimePassword', { phone: this.state.phone });
+			let { data } = await googleCloudFunctions.post('/verifyOneTimePassword', {
+				phone: this.state.phone,
+				code: this.state.code,
+			});
+
+			firebase.auth().signInWithCustomToken(data.token);
 		} catch (error) {
 			this.setState({ errorMessage: error.message });
 		}
 	};
 
-	onTextInput = (phone) => {
+	onTextPhoneInput = (phone) => {
 		this.setState({ phone, errorMessage: '' });
+	};
+
+	onTextCodeInput = (code) => {
+		this.setState({ code, errorMessage: '' });
 	};
 
 	render() {
@@ -28,7 +38,13 @@ class SignupForm extends Component {
 					label='Enter Phone Number'
 					inputContainerStyle={styles.inputContainer}
 					value={this.state.phone}
-					onChangeText={(phone) => this.onTextInput(phone)}
+					onChangeText={(phone) => this.onTextPhoneInput(phone)}
+				/>
+				<Input
+					label='Enter code'
+					inputContainerStyle={styles.inputContainer}
+					value={this.state.code}
+					onChangeText={(code) => this.onTextCodeInput(code)}
 				/>
 				<Button title='Submit' onPress={this.handleSubmit} />
 				{this.state.errorMessage ? <Text>{this.state.errorMessage}</Text> : null}
@@ -49,4 +65,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default SignupForm;
+export default SigninForm;
