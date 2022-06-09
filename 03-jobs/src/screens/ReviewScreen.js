@@ -11,12 +11,12 @@ const ReviewScreen = () => {
 	);
 };
 
-ReviewScreen.navigationOptions = {
-	title: 'Review Jobs',
-	headerRight: () => {
-		return <Button title='Settings' />;
-	},
-};
+// ReviewScreen.navigationOptions = {
+// 	title: 'Review Jobs',
+// 	headerRight: () => {
+// 		return <Button title='Settings' />;
+// 	},
+// };
 
 const styles = StyleSheet.create({
 	container: {
