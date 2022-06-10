@@ -24,6 +24,7 @@ const WelcomeScreen = ({ navigation }) => {
 
 WelcomeScreen.navigationOptions = {
 	title: 'Welcome',
+	tabBarVisible: false,
 };
 
 const styles = StyleSheet.create({

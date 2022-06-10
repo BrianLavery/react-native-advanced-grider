@@ -1,7 +1,9 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { Provider } from 'react-redux';
 
+import store from './src/store';
 import AuthScreen from './src/screens/AuthScreen';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import MapScreen from './src/screens/MapScreen';
@@ -22,10 +24,22 @@ const mainFlow = createBottomTabNavigator({
 	reviews: reviewFlow,
 });
 
+mainFlow.navigationOptions = {
+	tabBarVisible: false,
+};
+
 const MainNavigator = createBottomTabNavigator({
 	welcome: WelcomeScreen,
 	auth: AuthScreen,
 	main: mainFlow,
 });
 
-export default createAppContainer(MainNavigator);
+const App = createAppContainer(MainNavigator);
+
+export default () => {
+	return (
+		<Provider store={store}>
+			<App />
+		</Provider>
+	);
+};
