@@ -1,20 +1,19 @@
-import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView from 'react-native-maps';
 
 const MapScreen = () => {
+	const [region, setRegion] = useState({
+		longitude: -122,
+		latitude: 37,
+		longitudeDelta: 0.04,
+		latitudeDelta: 0.09,
+	});
+
 	return (
 		<SafeAreaView style={styles.container}>
-			<MapView
-				style={styles.map}
-				initialRegion={{
-					latitude: 13.728435051859396,
-					longitude: 100.5710083251757,
-					latitudeDelta: 0.03,
-					longitudeDelta: 0.03,
-				}}
-			/>
+			<MapView style={styles.map} initialRegion={region} />
 		</SafeAreaView>
 	);
 };
@@ -34,3 +33,5 @@ const styles = StyleSheet.create({
 });
 
 export default MapScreen;
+
+// Indeed API Key: 4201738803816157
