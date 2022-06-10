@@ -1,20 +1,29 @@
 import React, { useEffect } from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { appLogin } from '../actions';
 
-const AuthScreen = ({ appLogin }) => {
+const AuthScreen = ({ appLogin, token, navigation }) => {
 	useEffect(() => {
-		appLogin();
-		AsyncStorage.removeItem('fb_token');
+		appLogin(); // this is asyncrhonous
 	}, []);
+
+	useEffect(() => {
+		onAuthComplete();
+	}, [token]);
+
+	const onAuthComplete = () => {
+		if (token) {
+			navigation.navigate('map');
+		}
+	};
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<Text style={{ fontSize: 36 }}>AuthScreen</Text>
+			<ActivityIndicator size='large' />
 		</SafeAreaView>
 	);
 };
@@ -33,7 +42,8 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default connect(null, { appLogin })(AuthScreen);
+const mapStateToProps = ({ auth }) => {
+	return { token: auth.token };
+};
 
-// tabBarVisible: false
-// lazy: true
+export default connect(mapStateToProps, { appLogin })(AuthScreen);
