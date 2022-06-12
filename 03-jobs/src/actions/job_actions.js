@@ -3,7 +3,7 @@ import reverseGeocode from 'latlng-to-zip';
 
 import { FETCH_JOBS } from './types';
 
-const fetchJobs = (region, term) => async (dispatch) => {
+const fetchJobs = (region, term, navigationCallback) => async (dispatch) => {
 	const { latitude, longitude } = region;
 	try {
 		const { data } = await yelp.get('/search', {
@@ -15,6 +15,7 @@ const fetchJobs = (region, term) => async (dispatch) => {
 			},
 		});
 		dispatch({ type: FETCH_JOBS, payload: data.businesses });
+		navigationCallback();
 	} catch (error) {
 		console.log(error);
 	}

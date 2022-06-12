@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import { fetchJobs } from '../actions';
 
-const MapScreen = ({ fetchJobs }) => {
+const MapScreen = ({ fetchJobs, navigation }) => {
 	const [region, setRegion] = useState({
 		longitude: -122,
 		latitude: 37,
@@ -21,7 +21,9 @@ const MapScreen = ({ fetchJobs }) => {
 	};
 
 	const onButtonPress = () => {
-		fetchJobs(region, term);
+		fetchJobs(region, term, () => {
+			navigation.navigate('deck');
+		});
 	};
 
 	return (
@@ -50,7 +52,7 @@ const MapScreen = ({ fetchJobs }) => {
 };
 
 MapScreen.navigationOptions = {
-	title: 'Map',
+	title: 'Search',
 };
 
 const styles = StyleSheet.create({

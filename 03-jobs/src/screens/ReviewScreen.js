@@ -13,7 +13,7 @@ const ReviewScreen = () => {
 
 ReviewScreen.navigationOptions = ({ navigation }) => {
 	return {
-		headerTitle: 'Review Jobs',
+		headerTitle: 'Review',
 		headerRight: () => {
 			return (
 				<Button
