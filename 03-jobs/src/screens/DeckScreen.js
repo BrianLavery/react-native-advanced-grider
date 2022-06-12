@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 import MapView from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,12 +7,24 @@ import { connect } from 'react-redux';
 
 import Swipe from '../components/Swipe';
 
-const DeckScreen = ({ jobs }) => {
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
+// CacheEnabled for map means that map renders as static image (should be quick)
+const DeckScreen = ({ jobs, navigation }) => {
 	const renderCard = (item) => {
+		const initialRegion = {
+			longitude: item.coordinates.longitude,
+			latitude: item.coordinates.latitude,
+			longitudeDelta: 0.02,
+			latitudeDelta: 0.02,
+		};
+
 		return (
 			<Card key={item.id}>
 				<Card.Title>{item.name}</Card.Title>
+				<Card.Divider />
 				<Card.Image source={{ uri: item.image_url }} />
+				<Card.Divider />
 				<View style={styles.detailWrapper}>
 					<Text>{item.categories[0].title}</Text>
 					<Text>{item.price}</Text>
@@ -21,7 +33,14 @@ const DeckScreen = ({ jobs }) => {
 					<Text>{item.rating} / 5</Text>
 					<Text>{item.review_count} reviews</Text>
 				</View>
-				<Button icon={{ name: 'code' }} backgroundColor='#03A9F4' title='View Now!' />
+				<Card.Divider />
+				<View style={{ height: SCREEN_HEIGHT * 0.3 }}>
+					<MapView
+						scrollEnabled={false}
+						style={{ flex: 1 }}
+						cacheEnabled={false}
+						initialRegion={initialRegion}></MapView>
+				</View>
 			</Card>
 		);
 	};
@@ -29,10 +48,14 @@ const DeckScreen = ({ jobs }) => {
 	const renderNoMoreCards = () => {
 		return (
 			<Card>
-				<Card.Title>All Done!</Card.Title>
+				<Card.Title>No more restaurants</Card.Title>
 				<Card.Divider />
-				<Text style={{ marginBottom: 12 }}>There's no more content here!</Text>
-				<Button title='Get more!' backgroundColor='#03A9F4'></Button>
+				<Button
+					title='Review Liked Restaurants'
+					backgroundColor='#03A9F4'
+					onPress={() => {
+						navigation.navigate('review');
+					}}></Button>
 			</Card>
 		);
 	};
