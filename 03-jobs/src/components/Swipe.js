@@ -12,14 +12,15 @@ import {
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_THRESHOLD = 0.3 * SCREEN_WIDTH;
-const SWIPE_OUT_DURATION = 250;
-const CASCADE_AMOUNT_VERTICAL = 10;
+const SWIPE_OUT_DURATION = 500;
+const CASCADE_AMOUNT_VERTICAL = 5;
 const CASCADE_AMOUNT_HORIZONTAL = 0;
 
 class Swipe extends Component {
 	static defaultProps = {
 		onSwipeRight: () => {},
 		onSwipeLeft: () => {},
+		keyProp: 'id',
 	};
 
 	constructor(props) {
@@ -47,14 +48,18 @@ class Swipe extends Component {
 		});
 
 		// We don't use state to update panResponder or position so we could assign to this.panResponder and this.position if we chose to
-		this.state = { panResponder, position, index: 0 };
+		this.state = { panResponder, position, index: 0, firstItem: {} };
 	}
 
 	// NOT SURE FUNCTION BELOW WORKS - HE USED componentWillReceiveProps (deprecated) and this was suggested
 	static getDerivedStateFromProps(nextProps, prevState) {
-		if (nextProps.data !== prevState.data) {
-			return { index: 0 };
+		if (nextProps.data[0] !== prevState.firstItem) {
+			return {
+				index: 0,
+				firstItem: nextProps.data[0],
+			};
 		}
+		return null;
 	}
 
 	componentDidUpdate() {
@@ -65,7 +70,7 @@ class Swipe extends Component {
 
 	// Animated.timing moves linear motion
 	forceSwipe(direction) {
-		const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
+		const x = direction === 'right' ? SCREEN_WIDTH * 2 : -SCREEN_WIDTH * 2;
 
 		Animated.timing(this.state.position, {
 			toValue: { x, y: 0 },
@@ -120,7 +125,7 @@ class Swipe extends Component {
 				if (arrayIndex === this.state.index) {
 					return (
 						<Animated.View
-							key={item.id}
+							key={item[this.props.keyProp]}
 							style={[this.getCardStyle(), styles.cardStyle]}
 							{...this.state.panResponder.panHandlers}>
 							{this.props.renderCard(item)}
@@ -135,8 +140,9 @@ class Swipe extends Component {
 						style={[
 							styles.cardStyle,
 							{
-								top: CASCADE_AMOUNT_VERTICAL * (arrayIndex - this.state.index) + SCREEN_HEIGHT * 0.05,
+								top: CASCADE_AMOUNT_VERTICAL * (arrayIndex - this.state.index) + SCREEN_HEIGHT * 0.02,
 								left: CASCADE_AMOUNT_HORIZONTAL * (arrayIndex - this.state.index),
+								zIndex: -arrayIndex,
 							},
 						]}>
 						{this.props.renderCard(item)}
@@ -155,7 +161,7 @@ const styles = StyleSheet.create({
 	cardStyle: {
 		position: 'absolute',
 		width: SCREEN_WIDTH,
-		top: SCREEN_HEIGHT * 0.05,
+		top: SCREEN_HEIGHT * 0.02,
 	},
 });
 

@@ -1,7 +1,7 @@
 import yelp from '../apis/yelp';
 import reverseGeocode from 'latlng-to-zip';
 
-import { FETCH_JOBS } from './types';
+import { FETCH_JOBS, LIKE_JOB } from './types';
 
 const fetchJobs = (region, term, navigationCallback) => async (dispatch) => {
 	const { latitude, longitude } = region;
@@ -30,4 +30,11 @@ const getZipCode = async (region) => {
 	}
 };
 
-export { fetchJobs };
+const likeJob = (job) => {
+	return {
+		payload: job,
+		type: LIKE_JOB,
+	};
+};
+
+export { fetchJobs, likeJob };

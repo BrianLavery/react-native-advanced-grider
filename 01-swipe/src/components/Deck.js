@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { View, Animated, PanResponder, Dimensions, StyleSheet, LayoutAnimation, UIManager } from 'react-native';
+import {
+	View,
+	Animated,
+	PanResponder,
+	Dimensions,
+	StyleSheet,
+	LayoutAnimation,
+	UIManager,
+} from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -39,20 +47,18 @@ class Deck extends Component {
 		});
 
 		// We don't use state to update panResponder or position so we could assign to this.panResponder and this.position if we chose to
-		this.state = { panResponder, position, index: 0 };
+		this.state = { panResponder, position, index: 0, firstItem: {} };
 	}
 
 	// NOT SURE FUNCTION BELOW WORKS - HE USED componentWillReceiveProps (deprecated) and this was suggested
 	static getDerivedStateFromProps(nextProps, prevState) {
-		if (nextProps.data !== prevState.data) {
-			return { index: 0 };
+		if (nextProps.data[0] !== prevState.firstItem) {
+			return {
+				index: 0,
+				firstItem: nextProps.data[0],
+			};
 		}
-	}
-
-	componentDidUpdate() {
-		// This long line below is specifically for Android
-		UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-		LayoutAnimation.spring();
+		return null;
 	}
 
 	// Animated.timing moves linear motion

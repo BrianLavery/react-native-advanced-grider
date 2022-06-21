@@ -6,11 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { connect } from 'react-redux';
 
 import Swipe from '../components/Swipe';
+import { likeJob } from '../actions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 // CacheEnabled for map means that map renders as static image (should be quick)
-const DeckScreen = ({ jobs, navigation }) => {
+const DeckScreen = ({ jobs, navigation, likeJob }) => {
 	const renderCard = (item) => {
 		const initialRegion = {
 			longitude: item.coordinates.longitude,
@@ -62,7 +63,13 @@ const DeckScreen = ({ jobs, navigation }) => {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<Swipe data={jobs} renderCard={renderCard} renderNoMoreCards={renderNoMoreCards} />
+			<Swipe
+				data={jobs}
+				renderCard={renderCard}
+				renderNoMoreCards={renderNoMoreCards}
+				keyProp='id'
+				onSwipeRight={(job) => likeJob(job)}
+			/>
 		</SafeAreaView>
 	);
 };
@@ -87,4 +94,4 @@ const mapStateToProps = ({ jobs }) => {
 	return { jobs };
 };
 
-export default connect(mapStateToProps)(DeckScreen);
+export default connect(mapStateToProps, { likeJob })(DeckScreen);
