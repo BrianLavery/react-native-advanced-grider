@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Input } from 'react-native-elements';
+import { Button, Input, Icon } from 'react-native-elements';
 import MapView from 'react-native-maps';
 import { connect } from 'react-redux';
 
@@ -53,6 +53,9 @@ const MapScreen = ({ fetchJobs, navigation }) => {
 
 MapScreen.navigationOptions = {
 	title: 'Search',
+	tabBarIcon: ({ tintColor }) => {
+		return <Icon name='my-location' size={30} color={tintColor} />;
+	},
 };
 
 const styles = StyleSheet.create({

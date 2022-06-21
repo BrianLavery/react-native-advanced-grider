@@ -2,6 +2,7 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Provider } from 'react-redux';
+import { Icon } from 'react-native-elements';
 
 import store from './src/store';
 import AuthScreen from './src/screens/AuthScreen';
@@ -16,13 +17,25 @@ const reviewFlow = createStackNavigator({
 	settings: SettingsScreen,
 });
 
-reviewFlow.navigationOptions = { title: 'Review Jobs' };
+reviewFlow.navigationOptions = {
+	title: 'Review Restaurants',
+	tabBarIcon: ({ tintColor }) => {
+		return <Icon name='favorite' size={30} color={tintColor} />;
+	},
+};
 
-const mainFlow = createBottomTabNavigator({
-	map: MapScreen,
-	deck: DeckScreen,
-	reviews: reviewFlow,
-});
+const mainFlow = createBottomTabNavigator(
+	{
+		map: MapScreen,
+		deck: DeckScreen,
+		reviews: reviewFlow,
+	},
+	{
+		tabBarOptions: {
+			labelStyle: { fontSize: 11 },
+		},
+	}
+);
 
 mainFlow.navigationOptions = {
 	tabBarVisible: false,

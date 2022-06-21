@@ -1,29 +1,43 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform, ScrollView, Linking } from 'react-native';
 import { Card, Button } from 'react-native-elements';
-import MapView from 'react-native-maps';
+import MapView, { Circle } from 'react-native-maps';
 import { connect } from 'react-redux';
 
 const ReviewScreen = ({ likedJobs }) => {
 	const renderLikedJobs = () => {
 		return likedJobs.map((job) => {
-			const { id, name, categories, url, coordinates } = job;
+			const {
+				id,
+				name,
+				categories,
+				url,
+				coordinates: { latitude, longitude },
+			} = job;
 			const initialRegion = {
-				latitude: coordinates.latitude,
-				longitude: coordinates.longitude,
+				latitude: latitude,
+				longitude: longitude,
 				latitudeDelta: 0.045,
 				longitudeDelta: 0.02,
 			};
 
 			return (
 				<Card key={id}>
+					<Card.Title>{name}</Card.Title>
+					<Card.Divider />
 					<View style={{ height: 200 }}>
 						<MapView
 							style={{ flex: 1 }}
 							cacheEnabled={false}
 							scrollEnabled={false}
-							initialRegion={initialRegion}
-						/>
+							initialRegion={initialRegion}>
+							<Circle
+								center={{ latitude, longitude }}
+								radius={250}
+								strokeColor='rgba(15,40,255,1.0)'
+								fillColor='rgba(15,40,255,0.3)'
+							/>
+						</MapView>
 						<View style={styles.detailWrapper}>
 							<Text style={styles.italics}>{name}</Text>
 							<Text style={styles.italics}>{categories[0].title}</Text>
@@ -65,7 +79,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 	},
 	detailWrapper: {
-		marginBottom: 8,
+		marginVertical: 8,
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 	},

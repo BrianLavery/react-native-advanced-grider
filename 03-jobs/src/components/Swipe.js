@@ -153,11 +153,16 @@ class Swipe extends Component {
 	}
 
 	render() {
-		return <View>{this.renderCards()}</View>;
+		return <View style={styles.container}>{this.renderCards()}</View>;
 	}
 }
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
 	cardStyle: {
 		position: 'absolute',
 		width: SCREEN_WIDTH,

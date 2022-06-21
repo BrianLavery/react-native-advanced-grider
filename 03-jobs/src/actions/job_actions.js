@@ -1,14 +1,14 @@
 import yelp from '../apis/yelp';
 import reverseGeocode from 'latlng-to-zip';
 
-import { FETCH_JOBS, LIKE_JOB } from './types';
+import { FETCH_JOBS, LIKE_JOB, CLEAR_LIKED_JOBS } from './types';
 
 const fetchJobs = (region, term, navigationCallback) => async (dispatch) => {
 	const { latitude, longitude } = region;
 	try {
 		const { data } = await yelp.get('/search', {
 			params: {
-				limit: 50,
+				limit: 5,
 				term,
 				latitude,
 				longitude,
@@ -37,4 +37,8 @@ const likeJob = (job) => {
 	};
 };
 
-export { fetchJobs, likeJob };
+const clearLikedJobs = () => {
+	return { type: CLEAR_LIKED_JOBS };
+};
+
+export { fetchJobs, likeJob, clearLikedJobs };
