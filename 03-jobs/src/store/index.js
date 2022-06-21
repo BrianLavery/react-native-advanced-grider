@@ -11,10 +11,10 @@ const persistConfig = {
 	whitelist: ['likedJobs'],
 };
 
-const reducer = persistCombineReducers(config, reducers);
+const persistedReducer = persistReducer(persistConfig, reducers);
 
-const store = createStore(reducers, {}, compose(applyMiddleware(thunk)));
+const store = createStore(persistedReducer, {}, compose(applyMiddleware(thunk)));
 
-persistStore(store);
+const persistor = persistStore(store);
 
-export default store;
+export { store, persistor };
