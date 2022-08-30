@@ -4,7 +4,7 @@ import { Card, Button } from 'react-native-elements';
 import MapView, { Circle } from 'react-native-maps';
 import { connect } from 'react-redux';
 
-const ReviewScreen = ({ likedJobs }) => {
+const ReviewScreen = ({ likedJobs, navigation }) => {
 	const renderLikedJobs = () => {
 		return likedJobs.map((job) => {
 			const {
@@ -26,11 +26,7 @@ const ReviewScreen = ({ likedJobs }) => {
 					<Card.Title>{name}</Card.Title>
 					<Card.Divider />
 					<View style={{ height: 200 }}>
-						<MapView
-							style={{ flex: 1 }}
-							cacheEnabled={false}
-							scrollEnabled={false}
-							initialRegion={initialRegion}>
+						<MapView style={{ flex: 1 }} cacheEnabled={false} scrollEnabled={false} initialRegion={initialRegion}>
 							<Circle
 								center={{ latitude, longitude }}
 								radius={250}
@@ -49,7 +45,12 @@ const ReviewScreen = ({ likedJobs }) => {
 		});
 	};
 
-	return <ScrollView style={styles.container}>{renderLikedJobs()}</ScrollView>;
+	return (
+		<React.Fragment>
+			<ScrollView style={styles.container}>{renderLikedJobs()}</ScrollView>
+			<Button onPress={() => navigation.navigate('welcome')} style={{ marginBottom: 32 }} />
+		</React.Fragment>
+	);
 };
 
 ReviewScreen.navigationOptions = ({ navigation }) => {

@@ -6,6 +6,7 @@ import appId from '../environment/facebook';
 
 // Action creator below is asynchronous which is where we use thunk
 const appLogin = () => async (dispatch) => {
+	// await AsyncStorage.removeItem('fb_token');
 	const token = await AsyncStorage.getItem('fb_token');
 
 	if (token) {
